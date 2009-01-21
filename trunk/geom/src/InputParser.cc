@@ -31,6 +31,7 @@
 #include "Cigar.h"
 #include "Cylinder.h"
 #include "LongLens.h"
+#include "Ring.h"
 #include "Pyramid.h"
 #include "StructH5Writer.h"
 #include "Material.h"
@@ -305,6 +306,18 @@ void InputParser::parse() {
             }
           }
           ns.addStructure(new Dome(x,y,z,facets,material));
+        }
+        if (name=="Ring" || name=="HalfRing") {
+          double x = atof((char*)xmlGetProp(structNode,(xmlChar*)"x"));
+          double y = atof((char*)xmlGetProp(structNode,(xmlChar*)"y"));
+          double z = atof((char*)xmlGetProp(structNode,(xmlChar*)"z"));
+          double h = atof((char*)xmlGetProp(structNode,(xmlChar*)"height"));
+          double rout = atof((char*)xmlGetProp(structNode,(xmlChar*)"radiusin"));
+          double rin = atof((char*)xmlGetProp(structNode,(xmlChar*)"radiusout"));
+          std::string matName((char*)xmlGetProp(structNode,
+                                                (xmlChar*)"material"));
+          const Material* material = ns.getMaterial(matName);
+          ns.addStructure(new Ring(x,y,z,h,rin,rout,material));
         }
       }
     }
