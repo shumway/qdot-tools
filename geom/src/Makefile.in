@@ -61,8 +61,8 @@ am_geom_OBJECTS = Binary.$(OBJEXT) BinaryAlloy.$(OBJEXT) \
 	Material.$(OBJEXT) Nanostructure.$(OBJEXT) \
 	NeighborsH5.$(OBJEXT) Pure.$(OBJEXT) Pyramid.$(OBJEXT) \
 	RadialAlloy.$(OBJEXT) RandomNR.$(OBJEXT) \
-	Reconstructor.$(OBJEXT) SpeciesH5.$(OBJEXT) Sphere.$(OBJEXT) \
-	StructH5Writer.$(OBJEXT) Structure.$(OBJEXT) \
+	Reconstructor.$(OBJEXT) Ring.$(OBJEXT) SpeciesH5.$(OBJEXT) \
+	Sphere.$(OBJEXT) StructH5Writer.$(OBJEXT) Structure.$(OBJEXT) \
 	SuperCell.$(OBJEXT) SuperCellH5.$(OBJEXT) Well.$(OBJEXT) \
 	ZincBlende.$(OBJEXT) geom.$(OBJEXT)
 geom_OBJECTS = $(am_geom_OBJECTS)
@@ -168,8 +168,8 @@ sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
-geom_SOURCES = Binary.cc BinaryAlloy.cc Cigar.cc CommentH5.cc CommonAnionLinear.cc CommonAnionTernary.cc CommonCationTernary.cc Cone.cc CoordsH5.cc Cylinder.cc Dome.cc Ellipsoid.cc EtchedLattice.cc Hut.cc InputParser.cc LatticeIndexingH5.cc LatticeUtil.cc Lens.cc LongLens.cc Material.cc Nanostructure.cc NeighborsH5.cc Pure.cc Pyramid.cc RadialAlloy.cc RandomNR.cc Reconstructor.cc SpeciesH5.cc Sphere.cc StructH5Writer.cc Structure.cc SuperCell.cc SuperCellH5.cc Well.cc ZincBlende.cc geom.cc
-noinst_HEADERS = Binary.h BinaryAlloy.h Cigar.h CommentH5.h CommonAnionLinear.h CommonAnionTernary.h CommonCationTernary.h Cone.h CoordsH5.h Cylinder.h Dome.h Ellipsoid.h EtchedLattice.h Hut.h IVec3.h InputParser.h LatticeIndexingH5.h LatticeUtil.h Lens.h LongLens.h Material.h Nanostructure.h NeighborsH5.h Pure.h Pyramid.h RadialAlloy.h RandomNR.h Reconstructor.h SpeciesH5.h Sphere.h StructH5.h StructH5Writer.h Structure.h SuperCell.h SuperCellH5.h Vec3.h Well.h ZincBlende.h
+geom_SOURCES = Binary.cc BinaryAlloy.cc Cigar.cc CommentH5.cc CommonAnionLinear.cc CommonAnionTernary.cc CommonCationTernary.cc Cone.cc CoordsH5.cc Cylinder.cc Dome.cc Ellipsoid.cc EtchedLattice.cc Hut.cc InputParser.cc LatticeIndexingH5.cc LatticeUtil.cc Lens.cc LongLens.cc Material.cc Nanostructure.cc NeighborsH5.cc Pure.cc Pyramid.cc RadialAlloy.cc RandomNR.cc Reconstructor.cc Ring.cc SpeciesH5.cc Sphere.cc StructH5Writer.cc Structure.cc SuperCell.cc SuperCellH5.cc Well.cc ZincBlende.cc geom.cc
+noinst_HEADERS = Binary.h BinaryAlloy.h Cigar.h CommentH5.h CommonAnionLinear.h CommonAnionTernary.h CommonCationTernary.h Cone.h CoordsH5.h Cylinder.h Dome.h Ellipsoid.h EtchedLattice.h Hut.h IVec3.h InputParser.h LatticeIndexingH5.h LatticeUtil.h Lens.h LongLens.h Material.h Nanostructure.h NeighborsH5.h Pure.h Pyramid.h RadialAlloy.h RandomNR.h Reconstructor.h Ring.h SpeciesH5.h Sphere.h StructH5.h StructH5Writer.h Structure.h SuperCell.h SuperCellH5.h Vec3.h Well.h ZincBlende.h
 all: all-am
 
 .SUFFIXES:
@@ -263,6 +263,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/RadialAlloy.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/RandomNR.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Reconstructor.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Ring.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/SpeciesH5.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Sphere.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/StructH5Writer.Po@am__quote@
