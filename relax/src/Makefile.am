@@ -1,0 +1,3 @@
+bin_PROGRAMS = relax
+relax_SOURCES = CellRelaxer.cc Checkpoint.cc ConjGrad.cc CoordsH5.cc Forces.cc InputParser.cc LatticeIndexingH5.cc Mat3.cc Minimize1D.cc NeighborsH5.cc SpeciesH5.cc Spring.cc StillWeb.cc Stress.cc StressH5.cc SuperCellH5.cc SurfaceStress.cc TestForce.cc TotalEnergy.cc VFF.cc XMLParser.cc main.cc
+noinst_HEADERS = AtomicPotential.h CellRelaxer.h Checkpoint.h ConjGrad.h CoordsH5.h Forces.h InputParser.h LatticeIndexingH5.h Mat3.h Minimize1D.h NeighborsH5.h SpeciesH5.h Spring.h StillWeb.h Stress.h StressH5.h StructH5.h SuperCellH5.h SurfaceStress.h TestForce.h TotalEnergy.h VFF.h XMLParser.h
