@@ -25,7 +25,7 @@
 #include <iostream>
 
 void StressH5::h5Read(const std::string& filename) {
-  std::cout << "Reading coordinates from " << filename << std::endl;
+  std::cout << "Reading stress tensor from " << filename << std::endl;
   H5open();
   hid_t fileID = H5Fopen(filename.c_str(),H5F_ACC_RDONLY,H5P_DEFAULT);
   //Read the stress tensors.
@@ -46,21 +46,26 @@ void StressH5::h5Read(const std::string& filename) {
   H5close();
 }
 
-void StressH5::h5Write(const std::string& filename, const int mode) const {
+void StressH5::h5Write(const std::string& filename, int mode) const {
   //H5::Exception::dontPrint();
   std::cout << "Writing stresses to " << filename << std::endl;
   H5open();
   hid_t fileID;
-  if (mode==NEW) {
+  /// Try to open the file
+  fileID = H5Fopen(filename.c_str(),H5F_ACC_RDWR,H5P_DEFAULT);
+  if (fileID<0) { // Create file if open failed.
     fileID = H5Fcreate(filename.c_str(),H5F_ACC_TRUNC,H5P_DEFAULT,H5P_DEFAULT);
-  } else {
-    fileID = H5Fopen(filename.c_str(),H5F_ACC_RDWR,H5P_DEFAULT);
-  }
-  hid_t dsetID; 
-  hid_t grpID; 
-  hid_t plist; 
+  } 
+  hid_t dsetID=-1; 
+  hid_t grpID=-1; 
+  hid_t plist=0; 
   const int natoms = stress.stress.size();
-  if (mode!=REWRITE) {
+  // Try to open dataset (briefly disable error messaging).
+  herr_t (*errfunc)(void*); void *errdata;
+  H5Eget_auto(&errfunc,&errdata); H5Eset_auto(NULL,NULL);
+  dsetID = H5Dopen(fileID,"stress/stress");
+  H5Eset_auto(errfunc,errdata);
+  if (dsetID<0) { // Create group and dataset if open failed.
     grpID = H5Gcreate(fileID,"stress",0);
     // Write out the stress.
     hsize_t dims[] = {natoms,6};
@@ -69,37 +74,26 @@ void StressH5::h5Write(const std::string& filename, const int mode) const {
     dims[0] = (natoms<50000) ? natoms : 50000;
     H5Pset_chunk(plist,2,dims);
     H5Pset_deflate(plist,1);
-    hid_t dsetID = H5Dcreate(grpID,"stress",H5T_NATIVE_FLOAT,dspaceID,plist);
+    dsetID = H5Dcreate(grpID,"stress",H5T_NATIVE_FLOAT,dspaceID,plist);
     H5Pclose(plist);
     plist = H5Pcreate(H5P_DATASET_XFER);
     H5Pset_buffer(plist,100000000,0,0); 
-#ifdef ENABLE_FLOAT
-    H5Dwrite(dsetID,H5T_NATIVE_FLOAT,H5S_ALL,H5S_ALL,plist,
-             stress.stress.data());
-#else
-    H5Dwrite(dsetID,H5T_NATIVE_DOUBLE,H5S_ALL,H5S_ALL,plist,
-             stress.stress.data());
-#endif
-    H5Dclose(dsetID);
-    H5Pclose(plist);
     H5Sclose(dspaceID);
-  } else {
-    dsetID = H5Dopen(fileID,"stress/stress");
-#ifdef ENABLE_FLOAT
-    H5Dwrite(dsetID,H5T_NATIVE_FLOAT,H5S_ALL,H5S_ALL,0,stress.stress.data());
-#else
-    H5Dwrite(dsetID,H5T_NATIVE_DOUBLE,H5S_ALL,H5S_ALL,0,stress.stress.data());
-#endif
-    H5Dclose(dsetID);
-  }
-  if (mode!=REWRITE) {
+    // Create and write nAtom attribute.
     hid_t aspaceID = H5Screate(H5S_SCALAR);
     hid_t attrID = H5Acreate(grpID,"nAtom",H5T_NATIVE_INT,aspaceID,H5P_DEFAULT);
     H5Awrite(attrID,H5T_NATIVE_INT,&natoms);
     H5Aclose(attrID);
-    H5Sclose(aspaceID);
     H5Gclose(grpID);
   }
+#ifdef ENABLE_FLOAT
+  H5Dwrite(dsetID,H5T_NATIVE_FLOAT,H5S_ALL,H5S_ALL,plist,
+           stress.stress.data());
+#else
+  H5Dwrite(dsetID,H5T_NATIVE_DOUBLE,H5S_ALL,H5S_ALL,plist,
+           stress.stress.data());
+#endif
+  H5Dclose(dsetID);
   // Close the file.
   H5Fclose(fileID);
   H5close();

@@ -30,7 +30,7 @@ public:
   /// Write the obejct to a struct.h5 file.
   virtual void h5Read(const std::string& filename);
   /// Write the obejct to a struct.h5 file.
-  virtual void h5Write(const std::string& filename, const int mode=APPEND)const;
+  virtual void h5Write(const std::string& filename, int mode) const;
 private:
   /// Reference to stress object.
   Stress& stress;
