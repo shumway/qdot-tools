@@ -1,0 +1,80 @@
+// $Id:
+/*
+    Copyright (C) 2004 John B. Shumway, Jr.
+
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+*/
+#include "CommentH5.h"
+
+
+CommentH5::CommentH5() {
+  comment="";
+}
+
+CommentH5::CommentH5(const std::string& filename){
+  h5Read(filename);
+}
+
+void CommentH5::h5Read(const std::string& filename) {
+  std::cout << "Reading comment from " << filename << std::endl;
+  H5open();
+  hid_t fileID = H5Fopen(filename.c_str(), H5F_ACC_RDWR, H5P_DEFAULT);
+#if (H5_VERS_MAJOR>1)||((H5_VERS_MAJOR==1)&&(H5_VERS_MINOR>=8))
+  hid_t dsetID = H5Dopen2(fileID, "comment", H5P_DEFAULT);
+#else
+  hid_t dsetID = H5Dopen(fileID, "comment");
+#endif
+  hid_t dspaceID = H5Dget_space(dsetID);
+  hid_t dtypeID = H5Dget_type(dsetID);
+  hid_t size = H5Tget_size(dtypeID);
+  char buffer[size];
+  H5Dread(dsetID, dtypeID, H5S_ALL, H5S_ALL, H5P_DEFAULT, &buffer);
+  comment.assign(buffer);
+  H5Sclose(dspaceID);
+  H5Dclose(dsetID);
+  H5Tclose(dtypeID);
+  H5Fclose(fileID);
+  H5close();
+}
+
+void CommentH5::h5Write(const std::string& filename, const int mode) const {
+  std::cout << "Writing comment to " << filename << std::endl;
+  H5open();
+  hid_t fileID;
+  switch(mode) {
+  case (NEW):
+    fileID = H5Fcreate(filename.c_str(), H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT);
+    break;
+  case (APPEND):
+    fileID = H5Fopen(filename.c_str(), H5F_ACC_RDWR, H5P_DEFAULT);
+    break;
+  }
+  hid_t dspaceID = H5Screate(H5S_SCALAR);
+  hid_t dtypeID = H5Tcopy(H5T_C_S1);
+  size_t size = comment.size();
+  H5Tset_size(dtypeID, size);
+#if (H5_VERS_MAJOR>1)||((H5_VERS_MAJOR==1)&&(H5_VERS_MINOR>=8))
+  hid_t dsetID = H5Dcreate2(fileID, "comment", dtypeID, dspaceID, H5P_DEFAULT,
+                            H5P_DEFAULT,H5P_DEFAULT);
+#else
+  hid_t dsetID = H5Dcreate(fileID, "comment", dtypeID, dspaceID, H5P_DEFAULT);
+#endif
+  H5Dwrite(dsetID, dtypeID, H5S_ALL, H5S_ALL, H5P_DEFAULT, comment.data());
+  H5Dclose(dsetID);
+  H5Tclose(dtypeID);
+  H5Sclose(dspaceID);
+  H5Fclose(fileID);
+  H5close();
+}

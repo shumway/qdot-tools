@@ -1,0 +1,48 @@
+# Process this file with autoconf to produce a configure script.
+
+AC_PREREQ(2.59)
+AC_INIT(getema, 1.0, john.shumway@asu.edu)
+AC_CONFIG_SRCDIR([config.h.in])
+AM_CONFIG_HEADER([config.h])
+AC_CONFIG_AUX_DIR(config)
+AM_INIT_AUTOMAKE
+
+# Checks for programs.
+AC_PROG_CXX
+AC_PROG_CC
+AC_PROG_F77
+AC_F77_WRAPPERS
+AC_PROG_MAKE_SET
+AC_PROG_INSTALL
+AC_PROG_AWK
+AC_LANG(C++)
+
+# Checks for libraries.
+ACX_LAPACK(LIBS="$LAPACK_LIBS $BLAS_LIBS $LIBS $FLIBS")
+ 
+AM_PATH_XML2(2.4.0,,AC_MSG_ERROR([
+*** Libxml is required to build geom; Available at 
+http://www.libxml.org/.]))
+LIBS="$XML_LIBS $LIBS"
+CPPFLAGS="$XML_CFLAGS $CPPFLAGS"
+
+ACX_BLITZ(required)
+ACX_TVMET(required)
+AC_CHECK_LIB(hdf5,H5Fopen)
+
+# Checks for header files.
+AC_HEADER_STDC
+AC_CHECK_HEADERS([stdlib.h])
+
+# Checks for typedefs, structures, and compiler characteristics.
+AC_HEADER_STDBOOL
+AC_C_CONST
+AC_TYPE_SIZE_T
+
+# Checks for library functions.
+AC_CHECK_FUNCS([sqrt])
+
+AC_CONFIG_FILES([Makefile
+                 doc/Makefile
+                 src/Makefile])
+AC_OUTPUT

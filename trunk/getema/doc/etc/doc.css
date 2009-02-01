@@ -1,0 +1,71 @@
+BODY{
+  background:white;
+  margin: 2px;
+  color:black;
+  font-size:10pt;
+  font-weight:normal;
+  font-family:Helvetica,Verdana,Arial,sans-serif;
+  text-align:justify;
+}
+
+TABLE,TD,TR {
+  font-size:9pt;
+  font-weight:normal;
+  font-family:Helvetica,Verdana,Arial,sans-serif;
+}
+
+H1,H2,H3,H4,H5 {
+  font-weight:normal;
+  padding: 0em;
+  margin: 0.3em 0em;
+}
+
+H1 {
+  font-size 14pt;
+  color:white;
+  padding: 0.2em 0em 0.2em 0em;
+  background-color:004080;
+  text-align:center;
+}
+
+H2 {
+  font-size: 11pt;
+  font-weight: bold;
+  color: #663333;
+}
+
+H3 {
+  font-size 11pt;
+  color: #333366;
+  text-decoration:italic;
+}
+
+A {
+  color:#000099;
+  text-decoration:none;
+}
+
+A:HOVER {
+  background-color:#CCCC99;
+}
+
+A.qindex:before {content:"["}
+A.qindex:after {content:"]"}
+UL, OL, DL {
+  padding: 0.05em;
+  margin:0.05em;
+}
+LI,DD {
+  padding:0.05em;
+  margin:0.05em 2em;
+}
+LI>A {
+  font-weight:bold;
+}
+FONT.keywordtype{color:#009966;font-weight:bold;}
+FONT.comment{color:#0000FF;font-style:italic;}
+FONT.keyword{color:#006600;font-weight:bold;}
+FONT.keywordflow{color:#990000;font-weight:bold;}
+FONT.preprocessor{color:#CC00FF;font-size:9pt;}
+FONT.stringliteral{color:#FF00FF;}
+PRE{text-align:left}
