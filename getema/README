@@ -1,0 +1,21 @@
+This utility extracts effective mass approximation (EMA)
+parameters from an atomistic nanostructure model. Input
+is a relaxed atomic configuration file "relaxed.h5" with
+stress tensors for each atom, and an XML input file,
+ema.xml. Output is gridded data in HDF5 format.
+
+This is our initial open source release, so we'll probably
+get some things wrong. To make the project, try "make".
+If that doesn't work, go into the src directory and
+edit the Makefile. You'll need several libraries, including
+NCSA's HDF5.
+
+There are some example files in the examples subdirectory.
+
+See the COPYING file for terms and conditions of use, 
+modification, copying, and distribution.
+
+See the INSTALL file for compiliation instructions.
+
+http://phy.asu.edu/shumway
+john.shumway@asu.edu
