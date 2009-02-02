@@ -107,8 +107,12 @@ void CoordsH5::h5Write(const std::string& filename, const int mode) const {
   if (mode!=REWRITE) {
     int natoms = coords.size();
     hid_t aspaceID = H5Screate(H5S_SCALAR);
+#if (H5_VERS_MAJOR>1)||((H5_VERS_MAJOR==1)&&(H5_VERS_MINOR>=8))
     hid_t attrID = H5Acreate2(grpID,"nAtom",H5T_NATIVE_INT,aspaceID,
                               H5P_DEFAULT,H5P_DEFAULT);
+#else
+    hid_t attrID = H5Acreate(grpID,"nAtom",H5T_NATIVE_INT,aspaceID,H5P_DEFAULT);
+#endif
     H5Awrite(attrID,H5T_NATIVE_INT,&natoms);
     H5Aclose(attrID);
     H5Sclose(aspaceID);
