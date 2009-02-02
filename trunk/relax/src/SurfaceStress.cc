@@ -33,7 +33,7 @@ SurfaceStress::SurfaceStress(const CoordsH5& coords, const NeighborsH5& nbr,
     const AtomicPotential& pot)
   : coords(coords), nbr(nbr), species(species), cell(cell), pot(pot),
     stress(), volume() {
-  for (int i=0; i<coords.coords.size(); ++i) {
+  for (unsigned int i=0; i<coords.coords.size(); ++i) {
   } 
 };
  

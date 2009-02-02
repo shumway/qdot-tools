@@ -29,7 +29,11 @@ void StressH5::h5Read(const std::string& filename) {
   H5open();
   hid_t fileID = H5Fopen(filename.c_str(),H5F_ACC_RDONLY,H5P_DEFAULT);
   //Read the stress tensors.
+#if (H5_VERS_MAJOR>1)||((H5_VERS_MAJOR==1)&&(H5_VERS_MINOR>=8))
+  hid_t dsetID = H5Dopen2(fileID,"stress/stress",H5P_DEFAULT);
+#else
   hid_t dsetID = H5Dopen(fileID,"stress/stress");
+#endif
   hid_t dspaceID = H5Dget_space(dsetID);
   hsize_t dims[2];
   H5Sget_simple_extent_dims(dspaceID,dims,NULL);
@@ -62,11 +66,21 @@ void StressH5::h5Write(const std::string& filename, int mode) const {
   const int natoms = stress.stress.size();
   // Try to open dataset (briefly disable error messaging).
   herr_t (*errfunc)(void*); void *errdata;
+#if (H5_VERS_MAJOR>1)||((H5_VERS_MAJOR==1)&&(H5_VERS_MINOR>=8))
+  H5Eget_auto1(&errfunc,&errdata); H5Eset_auto1(NULL,NULL);
+  dsetID = H5Dopen2(fileID,"stress/stress",H5P_DEFAULT);
+  H5Eset_auto1(errfunc,errdata);
+#else
   H5Eget_auto(&errfunc,&errdata); H5Eset_auto(NULL,NULL);
   dsetID = H5Dopen(fileID,"stress/stress");
   H5Eset_auto(errfunc,errdata);
+#endif
   if (dsetID<0) { // Create group and dataset if open failed.
+#if (H5_VERS_MAJOR>1)||((H5_VERS_MAJOR==1)&&(H5_VERS_MINOR>=8))
+    grpID = H5Gcreate2(fileID,"stress",0,H5P_DEFAULT,H5P_DEFAULT);
+#else
     grpID = H5Gcreate(fileID,"stress",0);
+#endif
     // Write out the stress.
     hsize_t dims[] = {natoms,6};
     hid_t dspaceID = H5Screate_simple(2,dims,0);
@@ -74,14 +88,24 @@ void StressH5::h5Write(const std::string& filename, int mode) const {
     dims[0] = (natoms<50000) ? natoms : 50000;
     H5Pset_chunk(plist,2,dims);
     H5Pset_deflate(plist,1);
+#if (H5_VERS_MAJOR>1)||((H5_VERS_MAJOR==1)&&(H5_VERS_MINOR>=8))
+    dsetID = H5Dcreate2(grpID,"stress",H5T_NATIVE_FLOAT,dspaceID,plist,
+                        H5P_DEFAULT,H5P_DEFAULT);
+#else
     dsetID = H5Dcreate(grpID,"stress",H5T_NATIVE_FLOAT,dspaceID,plist);
+#endif
     H5Pclose(plist);
     plist = H5Pcreate(H5P_DATASET_XFER);
     H5Pset_buffer(plist,100000000,0,0); 
     H5Sclose(dspaceID);
     // Create and write nAtom attribute.
     hid_t aspaceID = H5Screate(H5S_SCALAR);
+#if (H5_VERS_MAJOR>1)||((H5_VERS_MAJOR==1)&&(H5_VERS_MINOR>=8))
+    hid_t attrID = H5Acreate2(grpID,"nAtom",H5T_NATIVE_INT,aspaceID,
+                              H5P_DEFAULT,H5P_DEFAULT);
+#else
     hid_t attrID = H5Acreate(grpID,"nAtom",H5T_NATIVE_INT,aspaceID,H5P_DEFAULT);
+#endif
     H5Awrite(attrID,H5T_NATIVE_INT,&natoms);
     H5Aclose(attrID);
     H5Gclose(grpID);

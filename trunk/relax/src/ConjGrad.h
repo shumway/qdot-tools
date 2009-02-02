@@ -57,10 +57,10 @@ private:
   Forces& f;
   /// Computation of total energy.
   TotalEnergy& en;
-  /// Direction for line minimization.
-  std::valarray<Vec3> direction;
   /// The coordinates to be optimized.
   CoordsH5& coords;
+  /// Direction for line minimization.
+  std::valarray<Vec3> direction;
   /// Last x value for operator() (used for maintaining accurate coordinates).
   double xLast;
   /// Checkpointer.

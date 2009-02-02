@@ -105,7 +105,6 @@ void TotalEnergy::compute() {
 }
 
 void TotalEnergy::report() {
-  int natom=coords.coords.size();
   std::cout << "Stretch energy = " << stretchEnergy*27.211 << " eV"<< std::endl;
   std::cout << "Bend energy = " << bendEnergy*27.211 << " eV" << std::endl;
   std::cout << "Binding energy = " << bindingEnergy*27.211 << " eV" << std::endl;

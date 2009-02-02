@@ -54,11 +54,7 @@
     @author John Shumway */
 class LatticeIndexingH5 : public StructH5 {
 public:
-#ifdef ENABLE_FLOAT
   typedef blitz::TinyVector<float,3> Vec3;
-#else
-  typedef blitz::TinyVector<double,3> Vec3;
-#endif
   typedef blitz::TinyVector<int,3> IVec3;
   /** Index structure (i,j,k,ipos). */
   struct indices {
@@ -69,9 +65,14 @@ public:
     const Vec3& a1, const Vec3& a2, const Vec3& a3, 
     const std::valarray<Vec3>& offset,
     const int natoms, const IVec3 n1, const IVec3 n2, const IVec3 n3);
+  /// Construct by reading from a file.
+  LatticeIndexingH5(const std::string& filename);
 
-  /** Write the supercell to a struct.h5 file. */
+
+  /** Write the lattice indexing to a struct.h5 file. */
   void h5Write(const std::string& filename, const int mode=APPEND) const;
+  /** Read the lattice indexing from a struct.h5 file. */
+  void h5Read(const std::string& filename);
   /** Get the number of atoms in the primative cell. */
   int getNAtomPerPrimCell() const;
   /** Get the offset of the ith atom in the primative cell. */
@@ -84,25 +85,25 @@ public:
   /** Get the primative cell index of the ith atom in the supercell. */
   int getIPos(const int i) const;
   /** Indexing. */
-  mutable std::valarray<indices> index;
+  std::valarray<indices> index;
   /** Lattice constant in atomic units. */
-  const double a;
+  double a;
   /** 1st primative cell lattice vector in units of a. */
-  const Vec3 a1;
+  Vec3 a1;
   /** 2nd primative cell lattice vector in units of a. */
-  const Vec3 a2;
+  Vec3 a2;
   /** 3rd primative cell lattice vector in units of a. */
-  const Vec3 a3;
+  Vec3 a3;
   /** Number of atoms in the primative cell. */
-  const int nAtomPerPrimCell;
+  int nAtomPerPrimCell;
   /** Offsets of atoms in the primative cell. */
-  mutable std::valarray<Vec3> offset;
+  std::valarray<Vec3> offset;
   /** 1st supercell vector, in primative basis coordinates. */
-  const IVec3 n1;
+  IVec3 n1;
   /** 2nd supercell vector, in primative basis coordinates. */
-  const IVec3 n2;
+  IVec3 n2;
   /** 3rd supercell vector, in primative basis coordinates. */
-  const IVec3 n3;
+  IVec3 n3;
 protected:
 };
 #endif

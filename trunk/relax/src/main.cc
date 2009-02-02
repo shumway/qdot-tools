@@ -90,7 +90,6 @@ int main(int argc, char** argv) {
   NeighborsH5 nbr(infile);
   Checkpoint* checkpoint=parser.parseCheckpoint(coords, species, nbr, cell);
   if (!checkpoint) std::cout << "No checkpointing request" << std::endl;
-  int natom=coords.coords.size();
   AtomicPotential *potential=parser.parsePotential();
   TotalEnergy en(coords,nbr,species,cell,*potential);
   Forces f(coords,nbr,species,cell,*potential);
