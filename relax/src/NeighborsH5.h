@@ -39,10 +39,10 @@ public:
   NeighborsH5(const int nmax, const int natoms);
   /** Construct from a struct.h5 file. */
   NeighborsH5(const std::string& filename);
-  /** The nearest neighbor lists. */
-  mutable std::valarray<int> nn;
   /** The maximum number of neighbors per atoms. */
   int nmax;
+  /** The nearest neighbor lists. */
+  mutable std::valarray<int> nn;
   /** Read the neighbor list from a struct.h5 file. */
   void h5Read(const std::string& filename);
   /** Write the neighbor list from a struct.h5 file. */

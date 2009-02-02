@@ -36,7 +36,7 @@ TestForce::~TestForce() {
 void TestForce::test() {
   std::cout << "Testing forces" << std::endl;
   f.compute();
-  int natom=coords.coords.size(); 
+  //int natom=coords.coords.size(); 
   en.compute();
   for (int iatom=0; iatom<20; ++iatom) {
     Vec3 deltae;

@@ -123,7 +123,7 @@ void VFF::dh(const double r1, const double r2, const double costheta,
   }
   double y1 = p1.d * p2.d;
   double y2 = r1 * r2 * costheta - y1 * cosphi[n];
-  double y3 = r1 * r1 - p1.d * p1.d;
+  //double y3 = r1 * r1 - p1.d * p1.d;
   dr1H = 0.75 * beta[n] * y2 * r2 * costheta / y1;
   dr2H = 0.75 * r1 * costheta * beta[n] * y2 / y1;
   dthetaH = 0.75 * r1 * r2 * beta[n] * y2 / y1;  //really dcosthetaH

@@ -49,15 +49,17 @@ void Forces::compute() {
   std::valarray<double> d(nbr.nmax);
   std::valarray<int> spec(nbr.nmax);
   std::valarray<int> id(nbr.nmax);
-  #ifdef _OPENMP
+#ifdef _OPENMP
   std::valarray<int> otherID(nbr.nmax*(1+2*(nbr.nmax-1))*NGROUP);
   std::valarray<Vec3> otherForce(nbr.nmax*(1+2*(nbr.nmax-1))*NGROUP);
-  #endif
+#endif
   Vec3 pos, rjhat, f;
   // Loop over all atoms.
-  #pragma omp for
+#pragma omp for
   for (int iatom0=0; iatom0<natom; iatom0+=NGROUP) {
+#ifdef _OPENMP
   int nother=0;
+#endif
   for (int iatom=iatom0; iatom<iatom0+NGROUP && iatom<natom; ++iatom) {
     pos=coords[iatom];
     int ispec=species.species[iatom]-1;
@@ -80,11 +82,11 @@ void Forces::compute() {
       //Add strech force.
       double drF2=pot.drF2(d[j],ispec,spec[j]);
       f=rjhat; f*=-0.5*drF2;
-      #ifdef _OPENMP
+#ifdef _OPENMP
       otherForce[nother]=f; otherID[nother++]=id[j];
-      #else
+#else
       force[id[j]]+=f;
-      #endif
+#endif
       force[iatom]-=f;
       for (int k=0; k<j; ++k) {
         Vec3 rkhat=delta[k]; rkhat/=d[k];
@@ -96,42 +98,42 @@ void Forces::compute() {
         pot.dh(d[j],d[k],costheta,ispec,spec[j],spec[k],dr1H,dr2H,dthetaH);
         //Derivative of bend potential wrt r1.
         f=rjhat; f*=-dr1H;
-        #ifdef _OPENMP
+#ifdef _OPENMP
         otherForce[nother]=f; otherID[nother++]=id[j];
-        #else
+#else
         force[id[j]]+=f;
-        #endif
+#endif
         force[iatom]-=f;
         //Derivative of bend potential wrt r2.
         f=rkhat; f*=-dr2H;
-        #ifdef _OPENMP
+#ifdef _OPENMP
         otherForce[nother]=f; otherID[nother++]=id[k];
-        #else
+#else
         force[id[k]]+=f;
-        #endif
+#endif
         force[iatom]-=f;
         //Derivative of bend potential wrt costheta;
         f=rjkhat; f*=dthetaH/d[j];
-        #ifdef _OPENMP
+#ifdef _OPENMP
         otherForce[nother]=f; otherID[nother++]=id[j];
-        #else
+#else
         force[id[j]]+=f;
-        #endif
+#endif
         force[iatom]-=f;
         f=rkjhat; f*=dthetaH/d[k];
-        #ifdef _OPENMP
+#ifdef _OPENMP
         otherForce[nother]=f; otherID[nother++]=id[k];
-        #else
+#else
         force[id[k]]+=f;
-        #endif
+#endif
         force[iatom]-=f;
       }
     }
     }
-    #ifdef _OPENMP
-    #pragma omp critical
+#ifdef _OPENMP
+#pragma omp critical
     for (int j=0; j<nother; ++j) force[otherID[j]]+=otherForce[j];
-    #endif
+#endif
   } 
   } 
 }
