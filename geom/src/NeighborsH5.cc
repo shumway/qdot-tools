@@ -36,7 +36,12 @@ void NeighborsH5::h5Write(const std::string& filename, const int mode) const {
     fileID = H5Fopen(filename.c_str(),H5F_ACC_RDWR,H5P_DEFAULT);
     break;
   }
+#if (H5_VERS_MAJOR>1)||((H5_VERS_MAJOR==1)&&(H5_VERS_MINOR>=8))
+  hid_t grpID = H5Gcreate2(fileID, "neighbors", H5P_DEFAULT,
+                             H5P_DEFAULT, H5P_DEFAULT);
+#else
   hid_t grpID = H5Gcreate(fileID,"neighbors",0);
+#endif
   // Write out the type index array.
   int natoms = nn.size()/nmax;
   hsize_t dims[] = {natoms,nmax};
@@ -45,7 +50,12 @@ void NeighborsH5::h5Write(const std::string& filename, const int mode) const {
   dims[0] = (natoms<50000) ? natoms : 50000;
   H5Pset_chunk(plist,2,dims);
   H5Pset_deflate(plist,1);
+#if (H5_VERS_MAJOR>1)||((H5_VERS_MAJOR==1)&&(H5_VERS_MINOR>=8))
+  hid_t dsetID = H5Dcreate(grpID,"neighbor",H5T_NATIVE_INT,dspaceID,
+                           H5P_DEFAULT,plist,H5P_DEFAULT);
+#else
   hid_t dsetID = H5Dcreate(grpID,"neighbor",H5T_NATIVE_INT,dspaceID,plist);
+#endif
   H5Pclose(plist);
   plist = H5Pcreate(H5P_DATASET_XFER);
   H5Pset_buffer(plist,10000000,0,0);

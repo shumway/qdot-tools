@@ -49,7 +49,12 @@ void CommentH5::h5Write(const std::string& filename, const int mode) const {
   hid_t dtypeID = H5Tcopy(H5T_C_S1);
   size_t size = comment.size();
   H5Tset_size(dtypeID, size);
+#if (H5_VERS_MAJOR>1)||((H5_VERS_MAJOR==1)&&(H5_VERS_MINOR>=8))
+  hid_t dsetID = H5Dcreate2(fileID, "comment", dtypeID, dspaceID, H5P_DEFAULT,
+                         H5P_DEFAULT, H5P_DEFAULT);
+#else
   hid_t dsetID = H5Dcreate(fileID, "comment", dtypeID, dspaceID, H5P_DEFAULT);
+#endif
   H5Dwrite(dsetID, dtypeID, H5S_ALL, H5S_ALL, H5P_DEFAULT, comment.data());
   H5Dclose(dsetID);
   H5Tclose(dtypeID);

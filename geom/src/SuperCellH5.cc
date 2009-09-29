@@ -38,16 +38,36 @@ void SuperCellH5::h5Write(const std::string& filename, const int mode) const {
     fileID = H5Fopen(filename.c_str(),H5F_ACC_RDWR,H5P_DEFAULT);
     break;
   }
-  hid_t grpID = H5Gcreate(fileID,"superCell",0);
+#if (H5_VERS_MAJOR>1)||((H5_VERS_MAJOR==1)&&(H5_VERS_MINOR>=8))
+  hid_t grpID = H5Gcreate2(fileID, "superCell", H5P_DEFAULT,
+                             H5P_DEFAULT, H5P_DEFAULT);
+#else
+  hid_t grpID = H5Gcreate(fileID, "superCell", 0);
+#endif
   const hsize_t dims[] = {3};
   hid_t aspaceID = H5Screate_simple(1,dims,0);
+#if (H5_VERS_MAJOR>1)||((H5_VERS_MAJOR==1)&&(H5_VERS_MINOR>=8))
+  hid_t attrID = H5Acreate(grpID,"a1",H5T_NATIVE_FLOAT,aspaceID,H5P_DEFAULT,
+                           H5P_DEFAULT);
+#else
   hid_t attrID = H5Acreate(grpID,"a1",H5T_NATIVE_FLOAT,aspaceID,H5P_DEFAULT);
+#endif
   H5Awrite(attrID,H5T_NATIVE_DOUBLE,a1);
   H5Aclose(attrID);
+#if (H5_VERS_MAJOR>1)||((H5_VERS_MAJOR==1)&&(H5_VERS_MINOR>=8))
+  attrID = H5Acreate(grpID,"a2",H5T_NATIVE_FLOAT,aspaceID,H5P_DEFAULT,
+                           H5P_DEFAULT);
+#else
   attrID = H5Acreate(grpID,"a2",H5T_NATIVE_FLOAT,aspaceID,H5P_DEFAULT);
+#endif
   H5Awrite(attrID,H5T_NATIVE_DOUBLE,a2);
   H5Aclose(attrID);
+#if (H5_VERS_MAJOR>1)||((H5_VERS_MAJOR==1)&&(H5_VERS_MINOR>=8))
+  attrID = H5Acreate(grpID,"a3",H5T_NATIVE_FLOAT,aspaceID,H5P_DEFAULT,
+                           H5P_DEFAULT);
+#else
   attrID = H5Acreate(grpID,"a3",H5T_NATIVE_FLOAT,aspaceID,H5P_DEFAULT);
+#endif
   H5Awrite(attrID,H5T_NATIVE_DOUBLE,a3);
   H5Aclose(attrID);
   H5Sclose(aspaceID);
