@@ -36,7 +36,12 @@ void CoordsH5::h5Write(const std::string& filename, const int mode) const {
     fileID = H5Fopen(filename.c_str(),H5F_ACC_RDWR,H5P_DEFAULT);
     break;
   }
-  hid_t grpID = H5Gcreate(fileID,"coords",0);
+#if (H5_VERS_MAJOR>1)||((H5_VERS_MAJOR==1)&&(H5_VERS_MINOR>=8))
+  hid_t grpID = H5Gcreate2(fileID, "coords", H5P_DEFAULT,
+                             H5P_DEFAULT, H5P_DEFAULT);
+#else
+  hid_t grpID = H5Gcreate(fileID, "coords", 0);
+#endif
   // Write out the coordinates.
   int natoms = coords.size();
   hsize_t dims[] = {natoms,3};
@@ -45,7 +50,13 @@ void CoordsH5::h5Write(const std::string& filename, const int mode) const {
   dims[0] = (natoms<50000) ? natoms : 50000;
   H5Pset_chunk(plist,2,dims);
   H5Pset_deflate(plist,1);
+#if (H5_VERS_MAJOR>1)||((H5_VERS_MAJOR==1)&&(H5_VERS_MINOR>=8))
+  hid_t dsetID = H5Dcreate2(grpID, "coord",
+                         H5T_NATIVE_FLOAT, dspaceID, H5P_DEFAULT,
+                         plist, H5P_DEFAULT);
+#else
   hid_t dsetID = H5Dcreate(grpID,"coord",H5T_NATIVE_FLOAT,dspaceID,plist);
+#endif
   H5Pclose(plist);
   plist = H5Pcreate(H5P_DATASET_XFER);
   H5Pset_buffer(plist,100000000,0,0);
@@ -55,7 +66,12 @@ void CoordsH5::h5Write(const std::string& filename, const int mode) const {
   H5Sclose(dspaceID);
   // Write the natoms attribute.
   hid_t aspaceID = H5Screate(H5S_SCALAR);
+#if (H5_VERS_MAJOR>1)||((H5_VERS_MAJOR==1)&&(H5_VERS_MINOR>=8))
+  hid_t attrID = H5Acreate(grpID,"nAtom",H5T_NATIVE_INT,aspaceID,H5P_DEFAULT,
+                           H5P_DEFAULT);
+#else
   hid_t attrID = H5Acreate(grpID,"nAtom",H5T_NATIVE_INT,aspaceID,H5P_DEFAULT);
+#endif
   H5Awrite(attrID,H5T_NATIVE_INT,&natoms);
   H5Aclose(attrID);
   H5Sclose(aspaceID);
