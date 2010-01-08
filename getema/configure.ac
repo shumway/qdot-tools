@@ -27,7 +27,6 @@ LIBS="$XML_LIBS $LIBS"
 CPPFLAGS="$XML_CFLAGS $CPPFLAGS"
 
 ACX_BLITZ(required)
-ACX_TVMET(required)
 AC_CHECK_LIB(hdf5,H5Fopen)
 
 # Checks for header files.
