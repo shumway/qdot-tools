@@ -89,8 +89,8 @@ void StressH5::h5Write(const std::string& filename, int mode) const {
     H5Pset_chunk(plist,2,dims);
     H5Pset_deflate(plist,1);
 #if (H5_VERS_MAJOR>1)||((H5_VERS_MAJOR==1)&&(H5_VERS_MINOR>=8))
-    dsetID = H5Dcreate2(grpID,"stress",H5T_NATIVE_FLOAT,dspaceID,plist,
-                        H5P_DEFAULT,H5P_DEFAULT);
+    dsetID = H5Dcreate2(grpID,"stress",H5T_NATIVE_FLOAT,dspaceID,H5P_DEFAULT,
+                        plist,H5P_DEFAULT);
 #else
     dsetID = H5Dcreate(grpID,"stress",H5T_NATIVE_FLOAT,dspaceID,plist);
 #endif
