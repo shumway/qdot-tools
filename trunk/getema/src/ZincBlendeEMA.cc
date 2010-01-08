@@ -76,6 +76,7 @@ void ZincBlendeEMA::calculate(const CompositionGrids& composition,
         // edge of dot.
         hamil(5)-=b*(eps(XX)+eps(YY)-2*eps(ZZ))+1000;
         double SO=(x*mat2.so+(1.-x)*mat1.so)/3.0;
+//        SO = 0.;
         std::complex<double> I=std::complex<double>(0.0,1.0);
         std::complex<double> zSO=I*SO;
         hamil(9)=hamil(0);
@@ -102,7 +103,7 @@ void ZincBlendeEMA::calculate(const CompositionGrids& composition,
         double lz5=std::real(I*vec(5,0)*std::conj(vec(5,1)))
                   -std::real(I*vec(5,3)*std::conj(vec(5,4)));
         int indexHH=(lz3 > lz5) ? 3 : 5;
-        vh(i,j,k)=x*mat2.ev+(1-x)*mat1.ev+en(indexHH)-SO;
+        vh(i,j,k)=x*mat2.ev+(1-x)*mat1.ev+en(indexHH);
       }
     }
   }
