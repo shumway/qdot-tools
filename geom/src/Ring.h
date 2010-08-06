@@ -36,9 +36,10 @@ protected:
   const double height;
   const double radiusin;
   const double radiusout;
+  const double s11;
 public:
   Ring(const double x, const double y, const double z,const double height,
-           const double radiusin, const double radiusout,
+           const double radiusin, const double radiusout, const double s11,
            const Material* material);
   bool isPointInStruct(const Vec3& pt) const;
 };
