@@ -21,15 +21,23 @@
 #include <cmath>
 
 Ring::Ring(const double x, const double y, const double z,
-  const double height, const double radiusin, const double radiusout,
+  const double height, const double radiusin, const double radiusout, const double s11,
   const Material *material)
   : Structure(material), x(x), y(y), z(z), height(height), 
-    radiusin(radiusin), radiusout(radiusout) {
+    radiusin(radiusin), radiusout(radiusout), s11(s11) {
 }
 
 bool Ring::isPointInStruct(const Vec3 &pt) const {
-  double a, b, c, d, r;
-  a = sqrt((pt.x-x) * (pt.x-x) + (pt.y-y) * (pt.y-y));
+  double a, b, c, d, r, x1, y1, x2, y2;
+  x1=0.5*pt.x*((1/s11)+1)+0.5*pt.y*((1/s11)-1);
+  y1=0.5*pt.x*((1/s11)-1)+0.5*pt.y*((1/s11)+1);
+  y1=0.5*pt.x*((1/s11)-1)+0.5*pt.y*((1/s11)+1);
+
+  x2=0.5*x*((1/s11)+1)+0.5*y*((1/s11)-1);
+  y2=0.5*x*((1/s11)-1)+0.5*y*((1/s11)+1);
+
+  a = sqrt((x1-x2) * (x1-x2) + (y1-y2) * (y1-y2));
+
   b = (radiusout - radiusin)/2;
   d = (radiusout + radiusin)/2;
   r = 0.5 * (height * height + b * b)/height; 
