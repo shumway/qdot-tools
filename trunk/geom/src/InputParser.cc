@@ -27,6 +27,7 @@
 #include "Sphere.h"
 #include "Lens.h"
 #include "Cone.h"
+#include "Ellipse.h"
 #include "Ellipsoid.h"
 #include "Cigar.h"
 #include "Cylinder.h"
@@ -320,6 +321,21 @@ void InputParser::parse() {
                                                 (xmlChar*)"material"));
           const Material* material = ns.getMaterial(matName);
           ns.addStructure(new Ring(x,y,z,h,rin,rout,s11,material));
+        }
+        if (name=="Ellipse") {
+          double x = atof((char*)xmlGetProp(structNode,(xmlChar*)"x"));
+          double y = atof((char*)xmlGetProp(structNode,(xmlChar*)"y"));
+          double z = atof((char*)xmlGetProp(structNode,(xmlChar*)"z"));
+          double h = atof((char*)xmlGetProp(structNode,(xmlChar*)"height"));
+          double a = atof((char*)xmlGetProp(structNode,(xmlChar*)"r_x"));
+          double a2 = atof((char*)xmlGetProp(structNode,(xmlChar*)"r_y"));
+          double r2 = atof((char*)xmlGetProp(structNode,(xmlChar*)"width_x"));
+          double r = atof((char*)xmlGetProp(structNode,(xmlChar*)"width_y"));
+          double phi = atof((char*)xmlGetProp(structNode,(xmlChar*)"phi"));
+          std::string matName((char*)xmlGetProp(structNode,
+                                                (xmlChar*)"material"));
+          const Material* material = ns.getMaterial(matName);
+          ns.addStructure(new Ellipse(x,y,z,phi,h,a,a2,r2,r,material));
         }
       }
     }
