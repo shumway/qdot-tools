@@ -45,7 +45,7 @@ public:
   /// Get the matrix of elastic constants for a grid point.
   virtual const Mat& operator() (const int i, const int j, const int k) const;
   /// Elastic constants for some common materials.
-  static const coef GAAS, INAS, SI, GE;
+  static const coef GAAS, INAS, GASB, SI, GE;
 private:
   /// Elastic constants  for the two materials.
   const coef mat1, mat2;

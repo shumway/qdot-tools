@@ -28,7 +28,7 @@ extern "C" void sgetri_(const int*, float*, const int*, const int*, float*, cons
 
 Strain::Strain(const GridFactory &factory, const CoordsH5 &coords,
     const CompositionGrids &composition, const NeighborsH5 &neighbors,
-    const SuperCellH5 &cell) 
+    const SuperCellH5 &cell, bool isInGaAs) 
   : grid(factory.getNewGrid<SymMat3>()),
     traceGrid(factory.getNewGrid<float>()), 
     biaxialGrid(factory.getNewGrid<float>()),
@@ -66,22 +66,37 @@ Strain::Strain(const GridFactory &factory, const CoordsH5 &coords,
   }
   // Next calculate strain tensor in each cell.
   std::cout << "Normalizing strain tensors" << std::endl;
+
   const Grid<float> &numAs(composition.getGrid(0));
   const Grid<float> &numGa(composition.getGrid(1));
   const Grid<float> &numIn(composition.getGrid(2));
+  const Grid<float> &numSb(composition.getGrid(3));
+
   SymMat3 one(1.,1.,1.,0.,0.,0.);
   IVec extent=grid->getExtent();
   const double aGaAs = 10.683;
   const double aInAs = 11.449;
+  const double aGaSb = 11.5196; //http://www.ioffe.ru/SVA/NSM/Semicond/GaSb/basic.html
   for (int i=0; i<extent[0]; ++i ) {
     for (int j=0; j<extent[1]; ++j ) {
       for (int k=0; k<extent[2]; ++k ) {
         float nAs=numAs(i,j,k);
         float nGa=numGa(i,j,k);
         float nIn=numIn(i,j,k);
-        float ntot = nAs + nGa + nIn;
+	float nSb=numSb(i,j,k);
+        float ntot = nAs + nGa + nIn + nSb;
         float xIn = nIn / (nGa + nIn);
-        double a = xIn*aInAs + (1.-xIn)*aGaAs;
+        float xSb = nSb / (nAs + nSb + 1E-6);
+	double a=0;	
+
+	if (isInGaAs) {
+         a = xIn*aInAs + (1.-xIn)*aGaAs;
+	} else { 
+         a = xSb*aGaSb + (1.-xSb)*aGaAs;
+	}
+
+//  std::cout << a << std::endl;
+
         blitz::TinyVector<float,6> strain = (*grid)(i,j,k);
         strain = (strain/(a*ntot)) - one;
         (*grid)(i,j,k) = strain;

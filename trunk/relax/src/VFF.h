@@ -70,8 +70,8 @@ class VFFParam {
     double d;
     double alpha1;
  };
-    double cosphi[4];
-    double beta[4];
+    double cosphi[6];
+    double beta[6];
 
 private:
   std::valarray<VFFParam> param;

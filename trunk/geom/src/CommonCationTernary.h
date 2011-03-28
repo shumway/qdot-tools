@@ -34,7 +34,7 @@ public:
       random number generator rand()*/
   CommonCationTernary(const std::string& name, const std::string& anion1Name, 
                   const std::string& anion2Name, const std::string& cationName,
-                  const double x1, const int seed);
+                  const double x1, const int seed, RandomNR& rand);
   /** Return the index for an anion at point p. */
   virtual int getAnionIndex(const Vec3& p) const;
   /** Return the index for a cation at point p.  Not reproducable,

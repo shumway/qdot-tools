@@ -61,7 +61,7 @@ public:
   /// Get the hole offset grid.
   virtual const Grid<float>& getVhGrid() const {return vh;}
   /// Parameters for some materials.
-  static const param GAAS, INAS, SI, GE;
+  static const param GAAS, INAS, GASB, SI, GE;
 private:
   /// Factory for creating new Grid objects.
   const GridFactory &factory;

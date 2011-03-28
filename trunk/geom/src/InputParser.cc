@@ -110,7 +110,7 @@ void InputParser::parse() {
           property_ptr = (char *) xmlGetProp(matNode,(xmlChar*)"seed");
           if(property_ptr) seed =  atoi(property_ptr);
           ns.addMaterial(new CommonCationTernary(name,anion1,anion2,
-                                                 cation,x1,seed));
+                                                 cation,x1,seed,rand));
         } else
         if (name=="CommonAnionLinear") {
           std::string name((char*)xmlGetProp(matNode,(xmlChar*)"name"));

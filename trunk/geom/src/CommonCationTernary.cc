@@ -2,10 +2,10 @@
 #include <cmath>
 #include <stdlib.h>
 #include "RandomNR.h"
-
 CommonCationTernary::CommonCationTernary(const  std::string& name, 
           const  std::string& anion1Name, const  std::string& anion2Name,
-          const  std::string& cationName, const double x1, const int seed)
+          const  std::string& cationName, const double x1, const int seed,
+	  RandomNR& rand)
   : Material(name,3), x1(x1), rand(rand) {
   speciesName[0]=anion1Name;
   speciesName[1]=anion2Name;

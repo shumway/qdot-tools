@@ -75,6 +75,7 @@ int main(int argc, char** argv) {
   double scale=1.0;
   if (argc==2) scale=atof(argv[1]);
   bool isInGaAs=true;
+  bool isGaAsSb=true;
   H5open();
   std::cout << "getema: calculate effective mass approximation grids"
           << std::endl;
@@ -91,22 +92,28 @@ int main(int argc, char** argv) {
   stressH5.h5Read(infile);
   CommentH5 comment(infile);
   // Identify the atom types.
-  int indSi=-1,indGe=-1,indGa=-1,indIn=-1;
+  int indSi=-1,indGe=-1,indAs=-1,indGa=-1,indIn=-1,indSb=-1;
   for (int i=0; i<species.getNSpecies(); ++i) {
     std::string name=species.getSpeciesName(i);
     if (name=="Si") indSi=i;
     if (name=="Ge") indGe=i;
+    if (name=="As") indAs=i;
     if (name=="Ga") indGa=i;
     if (name=="In") indIn=i;
+    if (name=="Sb") indSb=i;
   }
   if (indSi>=0 && indGe>=0) {
     isInGaAs=false;
+    isGaAsSb=false;
+  } else if (indSb>0) {
+    isGaAsSb=true;
+    isInGaAs=false;
   } else if (indGa<0 || indIn<0) {
-    std::cout << "Can't identify material as Si/Ge or InGaAs, exiting"
+    std::cout << "Can't identify material as Si/Ge, InGaAs or GaAsSb, exiting"
               << std::endl; 
     exit(-1);
   }
-  std::cout << "Calculating for " << (isInGaAs?"InGaAs":"Si/Ge") << std::endl;
+  std::cout << "Calculating for " << (isInGaAs?"InGaAs":isGaAsSb?"GaAsSb":"Si/Ge") << std::endl; //!!
   Vec delta=lattice.a;
   IVec extent;
   extent[0]=(int)((cell.a1[0]+0.5*delta[0])/delta[0]);
@@ -121,14 +128,17 @@ int main(int argc, char** argv) {
   if (isInGaAs) {
     elasticity = new ZincBlendeElasticity(gridFactory,
       ZincBlendeElasticity::GAAS, ZincBlendeElasticity::INAS,indGa,indIn);
+  } else if (isGaAsSb) {
+    elasticity = new ZincBlendeElasticity(gridFactory,
+      ZincBlendeElasticity::GAAS, ZincBlendeElasticity::GASB,indAs,indSb);    
   } else {
     elasticity = new ZincBlendeElasticity(gridFactory,
       ZincBlendeElasticity::SI, ZincBlendeElasticity::GE,indSi,indGe);
   }
   elasticity->calculate(composition);
   StrainGrid *strain=0;
-  if (isInGaAs) {
-    strain = new Strain(gridFactory,coords,composition,neighbors,cell);
+  if (isInGaAs || isGaAsSb) {
+    strain = new Strain(gridFactory,coords,composition,neighbors,cell,isInGaAs);
     //strain = new StrainFromStress(gridFactory,*elasticity,stressGrid);
   } else { 
     strain = new StrainFromStress(gridFactory,*elasticity,stressGrid);
@@ -137,6 +147,9 @@ int main(int argc, char** argv) {
   if (isInGaAs) {
     ema = new ZincBlendeEMA(gridFactory,
               ZincBlendeEMA::GAAS, ZincBlendeEMA::INAS,indGa,indIn);
+  } else if (isGaAsSb) {
+    ema = new ZincBlendeEMA(gridFactory,
+              ZincBlendeEMA::GAAS, ZincBlendeEMA::GASB,indAs,indSb);
   } else {
     ema = new ZincBlendeEMA(gridFactory,
               ZincBlendeEMA::SI, ZincBlendeEMA::GE,indSi,indGe);
