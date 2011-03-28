@@ -130,3 +130,8 @@ ZincBlendeEMA::GAAS(-5.29,-6.92,-7.17,1.16,-1.90,-4.23,0.34,0.00);
 // InAs            (  ec ,  ev ,  ac , av ,   b ,  d  , so , xi ) in eV.
 const ZincBlendeEMA::param
 ZincBlendeEMA::INAS(-6.13,-6.67,-5.08,1.00,-1.55,-3.10,0.38,0.00);
+
+// GaSb            (  ec ,  ev ,  ac , av ,   b ,  d  , so , xi ) in eV.
+const ZincBlendeEMA::param
+ZincBlendeEMA::GASB(-5.23,-6.25,-6.85,0.79,-2.0,-4.8,0.82,0.00);
+

@@ -39,7 +39,7 @@ public:
   static double biaxial(const SymMat3& m) {return 2*m[2]-m[0]-m[1];}
   /// Constructor.
   Strain(const GridFactory&, const CoordsH5&, 
-         const CompositionGrids&, const NeighborsH5&, const SuperCellH5& cell);
+         const CompositionGrids&, const NeighborsH5&, const SuperCellH5& cell, bool isInGaAs);
   /// Virtual destructor.
   virtual ~Strain();
   /// Get reference to the grid.

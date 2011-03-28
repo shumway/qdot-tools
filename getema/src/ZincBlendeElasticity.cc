@@ -68,6 +68,10 @@ ZincBlendeElasticity::GAAS(1.19,0.538,0.595);
 // InAs (c11,c12,c44)
 const ZincBlendeElasticity::coef
 ZincBlendeElasticity::INAS(0.8329,0.4526,0.3959);
+// GaSb (c11,c12,c44)
+//http://www.ioffe.ru/SVA/NSM/Semicond/GaSb/mechanic.html
+const ZincBlendeElasticity::coef
+ZincBlendeElasticity::GASB(0.883,0.402,0.432);
 // Si (c11,c12,c44)
 const ZincBlendeElasticity::coef
 ZincBlendeElasticity::SI(1.675,0.650,0.801);
